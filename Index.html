@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "lightpink", "id": "Multi-setting", "label": "Multi-setting", "shape": "dot", "size": 30, "title": ""}, {"color": "gray", "id": "Fusion Strategies", "label": "Fusion Strategies", "shape": "dot", "size": 50, "title": ""}, {"color": "lightgreen", "id": "Mid-level", "label": "Mid-level", "shape": "dot", "size": 30, "title": ""}, {"color": "moccasin", "id": "Post-processing", "label": "Post-processing", "shape": "dot", "size": 30, "title": ""}, {"color": "lightblue", "id": "Pre-processing", "label": "Pre-processing", "shape": "dot", "size": 30, "title": ""}, {"color": "lightgray", "id": "Kazi et al", "label": "Kazi et al", "shape": "dot", "size": 30, "title": "2 Introduced InceptionGCN to capture local and global context of heterogeneous graph structures using combined modalities in the affinity graph"}, {"color": "lightgray", "id": "Huang et al", "label": "Huang et al", "shape": "dot", "size": 30, "title": "54 Employed Edge-Variational GCN for multimodal data incorporation and disease prediction, using imaging features and non-imaging data of subjects"}, {"color": "lightgray", "id": "Lei et al", "label": "Lei et al", "shape": "dot", "size": 30, "title": "6 Utilized locally weighted clustering coefficients for multimodal fusion and better feature representation"}, {"color": "lightgray", "id": "Barzegar and Jamzad", "label": "Barzegar and Jamzad", "shape": "dot", "size": 30, "title": "10 Constructed a graph of multimodal inputs post-preprocessing, iteratively learning graph parameters and estimating labels"}, {"color": "lightgray", "id": "Qiu et al", "label": "Qiu et al", "shape": "dot", "size": 30, "title": "13 Used LWCC to fuse multimodal features, stacking these features to form new vectors and extracting brain network features"}, {"color": "lightgray", "id": "Yao et al", "label": "Yao et al", "shape": "dot", "size": 30, "title": "18 Created a heterogeneous graph, using a Heterogeneous Graph Attention Convolutional Network (HGACN) to learn new graph embeddings for the input subject"}, {"color": "lightgray", "id": "Lin et al", "label": "Lin et al", "shape": "dot", "size": 30, "title": "26 Integrated data using a heterogeneous population graph, learning disease-related information, gender-specific information, and common information via intra-level and interlevel attention layers"}, {"color": "lightgray", "id": "Zheng et al", "label": "Zheng et al", "shape": "dot", "size": 30, "title": " 29 Constructed a heterogeneous knowledge graph, creating a cross-level modality attention mechanism for information fusion"}, {"color": "lightgray", "id": "Schulte-Sasse et al", "label": "Schulte-Sasse et al", "shape": "dot", "size": 30, "title": "33 Used the explainable multi-omics graph integration (EMOGI) for integration and prediction, aggregating the first-order neighbourhood for each node"}, {"color": "lightgray", "id": "Luo et al", "label": "Luo et al", "shape": "dot", "size": 30, "title": "36 ransformed all data into a large graph, identifying co-expression clusters using a graph-clustering algorithm that maximizes information flow modularity"}, {"color": "lightgray", "id": "Fang et al", "label": "Fang et al", "shape": "dot", "size": 30, "title": "37 Modeled patient-data representations via a deep patient graph convolutional network, conducting spectral clustering to discover patient subgroups with distinct immunotherapy outcomes"}, {"color": "lightgray", "id": "Wan et al", "label": "Wan et al", "shape": "dot", "size": 30, "title": "40 Implemented a progressive graph-based transductive learning method, refining data representation and propagating clinical labels based on learned intrinsic data representation"}, {"color": "lightgray", "id": "Vivar et al", "label": "Vivar et al", "shape": "dot", "size": 30, "title": "41 Applied Geometric Matrix Completion to handle missing data, creating a feature matrix, and optimizing GCNN filters and RNN parameters for optimal matrix completion"}, {"color": "lightgray", "id": "Zhao et al", "label": "Zhao et al", "shape": "dot", "size": 30, "title": "42 Utilized spectral graph theory, defining a graph theoretical formulation of CNN for prediction labels"}, {"color": "lightgray", "id": "Liu et al", "label": "Liu et al", "shape": "dot", "size": 30, "title": "44 Implemented multi-task feature selection (MTFS), constructing a non-fully labeled subject graph using imaging and non-imaging phenotypic measures for disease identification"}, {"color": "lightgray", "id": "Wanyan et al", "label": "Wanyan et al", "shape": "dot", "size": 30, "title": "48Constructed a heterogeneous graph, utilizing graph embedding algorithm for low-dimensional representations and CNN for patient classification"}, {"color": "lightgray", "id": "Qu et al", "label": "Qu et al", "shape": "dot", "size": 30, "title": "52Integrated homogeneous medical graphs into a heterogeneous graph, applying self-attention for node weight learning, and predicting disease risks using the learned model."}, {"color": "lightgray", "id": "Yu et al", "label": "Yu et al", "shape": "dot", "size": 30, "title": "53 Designed a global heterogeneous graph and pre-trained medical entity embeddings, also used sequence-based approaches for predictive analysis of patient outcomes"}, {"color": "lightgray", "id": "Tong T et al", "label": "Tong T et al", "shape": "dot", "size": 30, "title": "1 Nonlinear graph fusion using Random Forest is applied for data integration and similarity measure extraction"}, {"color": "lightgray", "id": "Richard J et al", "label": "Richard J et al", "shape": "dot", "size": 30, "title": "3 Unimodal networks are trained individually, and then used for multimodal feature extraction for cancer prediction"}, {"color": "lightgray", "id": "Gao.J et al", "label": "Gao.J et al", "shape": "dot", "size": 30, "title": "4 A three-part methodology: bipartite graph, GNN layer, and a multimodal fusion neural layer is used for data integration"}, {"color": "lightgray", "id": "Zhu.Y et al", "label": "Zhu.Y et al", "shape": "dot", "size": 30, "title": "7 A dynamic hyper-graph integrating both diagnosis labels and clinical scores is created for joint classification and regressiong"}, {"color": "lightgray", "id": "Shao.W et al", "label": "Shao.W et al", "shape": "dot", "size": 30, "title": "8 Hyper-graphs for features are used, followed by sparse canonical correlation analysis and SVM for classification"}, {"color": "lightgray", "id": "Zhang.Y et al", "label": "Zhang.Y et al", "shape": "dot", "size": 30, "title": "9 A GCN framework with an adaptive pooling scheme integrates heterogeneous brain networks"}, {"color": "lightgray", "id": "Zuo.Q et al", "label": "Zuo.Q et al", "shape": "dot", "size": 30, "title": "16 Latent representations from different modalities are learned through GraphGAN and CNN-based GraphAE and then hyper-graph fusion is conducted"}, {"color": "lightgray", "id": "Azher.L.A et al", "label": "Azher.L.A et al", "shape": "dot", "size": 30, "title": "17 Modality-specific encoders create embeddings that are grouped into similar and different, which are then aggregated for prediction"}, {"color": "lightgray", "id": "Chen.Zh et al", "label": "Chen.Zh et al", "shape": "dot", "size": 30, "title": "19 Orthogonal Latent space learning with Feature weighting and Graph learning (OLFG) model maps multiple modalities into a common latent space"}, {"color": "lightgray", "id": "Zhang.S et al", "label": "Zhang.S et al", "shape": "dot", "size": 30, "title": "20 A graph-based solution constructs a relationship matrix of dual-modal features followed by GCN-based learning"}, {"color": "lightgray", "id": "Liu.L et al", "label": "Liu.L et al", "shape": "dot", "size": 30, "title": "21 A multi-modal graph convolutional network (MME-GCN) selects structural features, constructs a functional Graph, and makes predictions"}, {"color": "lightgray", "id": "Pan.J et al", "label": "Pan.J et al", "shape": "dot", "size": 30, "title": "22 A multi-scale adaptive multi-channel fusion deep graph convolutional network (MAMF-GCN) integrates features using attention mechanism"}, {"color": "lightgray", "id": "Zhang .Y et al", "label": "Zhang .Y et al", "shape": "dot", "size": 30, "title": "51 Co-attention module and patient correlation graph are used to fuse multi-modal features for clinical outcome prediction"}, {"color": "lightgray", "id": "Yi Hao Chan et al", "label": "Yi Hao Chan et al", "shape": "dot", "size": 30, "title": "24 A deep neural network with graph convolution layers combines multimodal data for disease classification"}, {"color": "lightgray", "id": "Zheng .Sh et al", "label": "Zheng .Sh et al", "shape": "dot", "size": 30, "title": "28 Modality-aware representation learning, adaptive graph learning, and GNN-based prediction are combined for data integration"}, {"color": "lightgray", "id": "Shao .W et al", "label": "Shao .W et al", "shape": "dot", "size": 30, "title": "31 A hyper-graph-based multi-task feature selection method is used along with multi-kernel SVM for final classification"}, {"color": "lightgray", "id": "Hojjati .S.H et al", "label": "Hojjati .S.H et al", "shape": "dot", "size": 30, "title": "32 Feature selection algorithms are used post feature extraction to identify optimal subset of features for SVM-based classifications"}, {"color": "lightgray", "id": "Markello  .R et al", "label": "Markello  .R et al", "shape": "dot", "size": 30, "title": "34 Patient similarity networks are generated and then fused together using a KNN weighted kernel and a non-linear message-passing protocol"}, {"color": "lightgray", "id": "Liu .J et al", "label": "Liu .J et al", "shape": "dot", "size": 30, "title": "43 Multi-atlas multi-view hybrid graph convolutional networks and ensemble learning are combined for disease detection"}, {"color": "lightgray", "id": "Lee .D et al", "label": "Lee .D et al", "shape": "dot", "size": 30, "title": "45 A unified graph representation learning framework embeds heterogeneous medical entities into a harmonized space"}, {"color": "lightgray", "id": "Zhang .X et al", "label": "Zhang .X et al", "shape": "dot", "size": 30, "title": "46 A matching network with multi-hop memory-augmented graph convolutions is used for metric learning on multimodal data"}, {"color": "lightgray", "id": "Wanyan .T et al", "label": "Wanyan .T et al", "shape": "dot", "size": 30, "title": "47 A LSTM-based heterogeneous graph model with relational learning strategy is used for mortality prediction"}, {"color": "lightgray", "id": "Huang .E .S et al", "label": "Huang .E .S et al", "shape": "dot", "size": 30, "title": "49 Patient records are enriched with a knowledge graph built from external databases and combined using a dimensionality reduction algorithm"}, {"color": "lightgray", "id": "Vivar .G et al", "label": "Vivar .G et al", "shape": "dot", "size": 30, "title": "12 Integrated clinical meta-features into graph networks using signal aggregation and self-attention for data fusion"}, {"color": "lightgray", "id": "Zhu .Y et al", "label": "Zhu .Y et al", "shape": "dot", "size": 30, "title": "15 Utilized contrastive learning and a shared MLP model for multi-modal data integration, ensuring cross-view consistency"}, {"color": "lightgray", "id": "Song et al", "label": "Song et al", "shape": "dot", "size": 30, "title": "39 Combined functional and structural brain data via an adaptive calibrated GCN, balanced scores for classification"}, {"color": "lightgray", "id": "Tan .K et al", "label": "Tan .K et al", "shape": "dot", "size": 30, "title": "14 Used ResNet-152 and SGCN for single-modal representation learning and FCNN for multi-modal fusion"}, {"color": "lightgray", "id": "D\u2019Souza .N.S et al", "label": "D\u2019Souza .N.S et al", "shape": "dot", "size": 30, "title": "27 Used representation learning of multiplexed graphs in a graph-based multimodal learning approach"}, {"color": "lightgray", "id": "Wang .Q et al", "label": "Wang .Q et al", "shape": "dot", "size": 30, "title": "25 Leveraged GNN and CNN in AMNI framework for adaptive multimodal neuroimage integration"}, {"color": "lightgray", "id": "Symeonidis .S et al", "label": "Symeonidis .S et al", "shape": "dot", "size": 30, "title": "50 Integrated EHR graph data with DDI knowledge graphs for improved medication recommendation"}]);
+                  edges = new vis.DataSet([{"from": "Multi-setting", "to": "Fusion Strategies"}, {"from": "Multi-setting", "to": "Tan .K et al"}, {"from": "Multi-setting", "to": "D\u2019Souza .N.S et al"}, {"from": "Multi-setting", "to": "Wang .Q et al"}, {"from": "Multi-setting", "to": "Symeonidis .S et al"}, {"from": "Fusion Strategies", "to": "Mid-level"}, {"from": "Fusion Strategies", "to": "Post-processing"}, {"from": "Fusion Strategies", "to": "Pre-processing"}, {"from": "Mid-level", "to": "Tong T et al"}, {"from": "Mid-level", "to": "Richard J et al"}, {"from": "Mid-level", "to": "Gao.J et al"}, {"from": "Mid-level", "to": "Zhu.Y et al"}, {"from": "Mid-level", "to": "Shao.W et al"}, {"from": "Mid-level", "to": "Zhang.Y et al"}, {"from": "Mid-level", "to": "Zuo.Q et al"}, {"from": "Mid-level", "to": "Azher.L.A et al"}, {"from": "Mid-level", "to": "Chen.Zh et al"}, {"from": "Mid-level", "to": "Zhang.S et al"}, {"from": "Mid-level", "to": "Liu.L et al"}, {"from": "Mid-level", "to": "Pan.J et al"}, {"from": "Mid-level", "to": "Zhang .Y et al"}, {"from": "Mid-level", "to": "Yi Hao Chan et al"}, {"from": "Mid-level", "to": "Zheng .Sh et al"}, {"from": "Mid-level", "to": "Shao .W et al"}, {"from": "Mid-level", "to": "Hojjati .S.H et al"}, {"from": "Mid-level", "to": "Markello  .R et al"}, {"from": "Mid-level", "to": "Liu .J et al"}, {"from": "Mid-level", "to": "Lee .D et al"}, {"from": "Mid-level", "to": "Zhang .X et al"}, {"from": "Mid-level", "to": "Wanyan .T et al"}, {"from": "Mid-level", "to": "Huang .E .S et al"}, {"from": "Post-processing", "to": "Vivar .G et al"}, {"from": "Post-processing", "to": "Zhu .Y et al"}, {"from": "Post-processing", "to": "Song et al"}, {"from": "Pre-processing", "to": "Kazi et al"}, {"from": "Pre-processing", "to": "Huang et al"}, {"from": "Pre-processing", "to": "Lei et al"}, {"from": "Pre-processing", "to": "Barzegar and Jamzad"}, {"from": "Pre-processing", "to": "Qiu et al"}, {"from": "Pre-processing", "to": "Yao et al"}, {"from": "Pre-processing", "to": "Lin et al"}, {"from": "Pre-processing", "to": "Zheng et al"}, {"from": "Pre-processing", "to": "Schulte-Sasse et al"}, {"from": "Pre-processing", "to": "Luo et al"}, {"from": "Pre-processing", "to": "Fang et al"}, {"from": "Pre-processing", "to": "Wan et al"}, {"from": "Pre-processing", "to": "Vivar et al"}, {"from": "Pre-processing", "to": "Zhao et al"}, {"from": "Pre-processing", "to": "Liu et al"}, {"from": "Pre-processing", "to": "Wanyan et al"}, {"from": "Pre-processing", "to": "Qu et al"}, {"from": "Pre-processing", "to": "Yu et al"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
